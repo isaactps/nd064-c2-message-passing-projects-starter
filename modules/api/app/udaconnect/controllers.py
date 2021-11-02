@@ -35,7 +35,16 @@ class LocationResource(Resource):
     def get(self, location_id) -> Location:
         location: Location = LocationService.retrieve(location_id)
         return location
-
+    
+    @responds(schema=LocationSchema, many=True)
+    def get(self) -> List[Location]:
+        return LocationService.retrieve_all()
+    
+class LocationService:
+    ...
+    @staticmethod
+    def retrieve_all() -> List[Location]:
+        return db.session.query(Location).all()
 
 @api.route("/persons")
 class PersonsResource(Resource):
