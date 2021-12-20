@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    service: udaconnect-api
-  name: udaconnect-api
+    service: udaconnect-person-service
+  name: udaconnect-person-service
 spec:
   ports:
   - name: "5000"
@@ -11,29 +11,48 @@ spec:
     targetPort: 5000
     nodePort: 30001
   selector:
-    service: udaconnect-api
+    service: udaconnect-person-service
   type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    service: udaconnect-api
-  name: udaconnect-api
+    service: udaconnect-person-service
+  name: udaconnect-person-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: udaconnect-api
+      service: udaconnect-person-service
   template:
     metadata:
       labels:
-        service: udaconnect-api
+        service: udaconnect-person-service
     spec:
       containers:
-      - image: udacity/nd064-udaconnect-api:latest
-        name: udaconnect-api
+      - image: isaactps/nd064-udaconnect-personservice:latest
+        name: udaconnect-person-service
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "64m"
+          limits:
+            memory: "256Mi"
+            cpu: "128m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 5
         env:
         - name: DB_USERNAME
           valueFrom:

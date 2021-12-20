@@ -1,0 +1,79 @@
+{
+	"swagger": "2.0",
+	"basePath": "/",
+	"paths": {
+		"/api/locations": {
+			"post": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Insert a new location into Database",
+				"operationId": "post_locations_resource",
+				"tags": [
+					"UdaConnect Location"
+				]
+			},
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Retrieve and list existing locations from Database",
+				"operationId": "get_locations_resource",
+				"tags": [
+					"UdaConnect Location"
+				]
+			}
+		},
+		"/api/locations/{location_id}": {
+			"parameters": [
+				{
+					"in": "path",
+					"description": "Unique ID for a given Location",
+					"name": "location_id",
+					"required": true,
+					"type": "string"
+				}
+			],
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Retrieve a location with given ID from Database",
+				"operationId": "get_location_resource",
+				"tags": [
+					"UdaConnect Location"
+				]
+			}
+		}
+	},
+	"info": {
+		"title": "locationService",
+		"version": "1.0.0"
+	},
+	"produces": [
+		"application/json"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"tags": [
+		{
+			"name": "UdaConnect Location",
+			"description": "Provides location data."
+		}
+	],
+	"responses": {
+		"ParseError": {
+			"description": "When a mask can't be parsed"
+		},
+		"MaskError": {
+			"description": "When any error occurs on mask"
+		}
+	}
+}

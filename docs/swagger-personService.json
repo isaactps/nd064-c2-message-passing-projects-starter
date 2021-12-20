@@ -1,0 +1,119 @@
+{
+	"swagger": "2.0",
+	"basePath": "/",
+	"paths": {
+		"/api/persons": {
+			"post": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Insert a new person into Database",
+				"operationId": "post_persons_resource",
+				"tags": [
+					"UdaConnect Person"
+				]
+			},
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Retrieve and list existing people from Database",
+				"operationId": "get_persons_resource",
+				"tags": [
+					"UdaConnect Person"
+				]
+			}
+		},
+		"/api/persons/{person_id}": {
+			"parameters": [
+				{
+					"in": "path",
+					"description": "Unique ID for a given Person",
+					"name": "person_id",
+					"required": true,
+					"type": "string"
+				}
+			],
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Retrieve a person with given ID from Database",
+				"operationId": "get_person_resource",
+				"tags": [
+					"UdaConnect Person"
+				]
+			}
+		},
+		"/api/persons/{person_id}/connection": {
+			"parameters": [
+				{
+					"in": "query",
+					"description": "Proximity to a given user in meters",
+					"name": "distance",
+					"type": "string"
+				},
+				{
+					"in": "query",
+					"description": "Upper bound of date range",
+					"name": "end_date",
+					"type": "string"
+				},
+				{
+					"in": "query",
+					"description": "Lower bound of date range",
+					"name": "start_date",
+					"type": "string"
+				},
+				{
+					"name": "person_id",
+					"in": "path",
+					"required": true,
+					"type": "string"
+				}
+			],
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				},
+				"description": "Search for connection data for a given person_id",
+				"operationId": "get_connection_resource",
+				"tags": [
+					"UdaConnect Person"
+				]
+			}
+		}
+	},
+	"info": {
+		"title": "personService",
+		"version": "1.0.0"
+	},
+	"produces": [
+		"application/json"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"tags": [
+		{
+			"name": "UdaConnect Person",
+			"description": "Provides person data."
+		}
+	],
+	"responses": {
+		"ParseError": {
+			"description": "When a mask can't be parsed"
+		},
+		"MaskError": {
+			"description": "When any error occurs on mask"
+		}
+	}
+}

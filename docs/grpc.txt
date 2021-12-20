@@ -1,0 +1,52 @@
+1. Generating Python gRPC Services for connectionService module:
+
+From the module's udaconnect folder, execute the following command:
+
+$ python -m grpc_tools.protoc -I./ --python_out=./ --grpc_python_out=./ connectionService.proto
+
+Stub and Servicer classes will be generated inside ./app/udaconnect/ folder.
+
+
+2. Udaconnect gRPC definitions:
+
+Protobuf definitions are written in the file connectionService.proto inside the module app/udaconnect/ folder
+
+This file defines the following messages, objects and service
+
+* searchMessage - Defines the input for user connection data searches
+    - person_id     int64
+    - start_date    google.protobuf.Timestamp
+    - end_date      google.protobuf.Timestamp
+    - meters        float
+
+* connectionMessage - The information pair between person and location regarding the connection search result
+    - location      Location
+    - person        Person
+
+* connectionMessageList - Wrapper message tha holds an array(repeated ConnectionMessage) with the search results
+    - connections   repeated ConnectionMessage
+
+* Location - Object with definition for Location data
+    - id    int64
+    - person_id     int64
+    - longitude     string
+    - latitude      string
+    - creation_time google.protobuf.Timestamp
+    - wkt_shape     string
+
+* Person - Object with definition for Person data
+    - id            int64
+    - first_name    string
+    - last_name     string
+    - company_name  string
+* connectionService - Service endpoint responsible for receiving searchMessages and responding with the correct connectionMessageList response.
+    - FindConnections(searchMessage) -> connectionMessageList
+
+
+3. Example grpc test request:
+
+A Python test script 'grpc_test.py' is provided in the root folder of the module to help in testing the service. It is configured to execute request directly to the NodePort for this service, e.g, localhost:30003. 
+
+Also, note that the parameters person id, start, end date and distance needed by the grpc searchMessage are hardcoded within the python script with values start date of 2020-01-01, end date of 2020-12-30, distance of 10 and person_id of 6.
+
+This script will then output the search Input data used and the output responses on the console accordingly.

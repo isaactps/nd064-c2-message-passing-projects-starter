@@ -1,0 +1,30 @@
+Architecture Design Decisions:
+
+1. PersonService
+
+ A REST API Microservice based on HTTP that is responsible for providing REST-based request handling of person data. Also, to handle the potential large volume of new people data injection by users, this mircoservice relies on Kafka-based messaging service with topic "person" to act as a Producer for sending new people object data to a Downstream Microservice that will act as a Consumer.
+
+ It also communicates with ConnectionService Microservice via gRPC protocol so as to exploit the benefits of the gRPC mechanism for interprocess communication between microservices. As such, all REST API requests for connections information between users are also handled by the PersonService Microservice.
+
+2. LocationService
+
+ Another REST API Microservice based on HTTP that is responsible for providing REST-based request handling of location data. Also, to handle the potential large volume of new location data injection by users, this mircoservice relies on Kafka-based messaging service with topic "location" to act as a Producer for sending new people object data to a Downstream Microservice that will act as a Consumer.
+
+3. ConnectionService
+
+ An internal API Microservice that provides geolocation capabilities to the Frontend web app. It is based on gRPC and the following were considered for making this decision:
+
+ * No data injection for this Microservice and thus it can rely on non REST API protocols which makes it a good choice for gRPC implementation  
+ * As it is also asynchronous based, it will less likely to create a I/O latency bottleneck in terms of latency to the Frontend web app. 
+
+4. PersonConsumer
+
+ This microservice is responsible for consuming incoming user messages from the kafka message queue with topic "person" that it shares with the PersonService and then injects the received messages into the Postgres DB. As such, this design will decouple the two I/O intensive processes of users data reception and user data injection into the DB from being handled by a single microservice.
+
+5. LocationConsumer
+
+ This microservice is responsible for consuming incoming user messages from the kafka message queue with topic "location" that it shares with the LocationService and then injects the received messages into the Postgres DB. As such, this design will decouple the two I/O intensive processes of users data reception and user data injection into the DB from being handled by a single microservice.
+
+6. Kafka Deployment in Kubernetes
+
+ * A simple Kafka deployment that is based on Bitnami images for kafka and zookeeper microservices is implemented via two yaml files for kubernetes.
